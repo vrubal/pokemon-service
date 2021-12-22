@@ -5,10 +5,10 @@ Installed Jdk 1.8 or 11. Maven 3+, Git and Docker.
 
 Steps to run the service
 
-1. Clone the service using git.
+1. Clone the service using git and checkout the master branch.
    ```
-   $ cd pokemon-service
    $ git clone https://github.com/vrubal/pokemon-service.git 
+   $ cd pokemon-service
    $ git checkout master
    ```
 2. Maven build the project.
