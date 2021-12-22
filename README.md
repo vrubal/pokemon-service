@@ -7,6 +7,7 @@ Steps to run the service
 
 1. Clone the service using git.
    ```
+   $ cd pokemon-service
    $ git clone https://github.com/vrubal/pokemon-service.git 
    $ git checkout master
    ```
@@ -16,7 +17,7 @@ Steps to run the service
    ```
 3. Build docker image
    ```
-   $ docker -build --tag=pokemon-service:latest .
+   $ docker build --tag=pokemon-service:latest .
    ```
 4. Run docker container
    ```
