@@ -8,25 +8,29 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Log4j2
 @Component
 public class PokemonSpeciesClient extends BaseClient{
     @Value("${pokemon.api.url}")
     private String pokemonServiceUrl;
 
-    public PokemonSpeciesResponse get(int pokemonId) {
+    public Optional<PokemonSpeciesResponse> get(int pokemonId) {
+        Optional<PokemonSpeciesResponse> pokemonSpeciesResponseOp = Optional.empty();
         try {
             HttpEntity<String> httpEntity = getHttpEntity();
             String url = pokemonServiceUrl + "/pokemon-species/" + pokemonId;
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                return objectMapper.readValue(responseEntity.getBody(), PokemonSpeciesResponse.class);
+                log.info("Successfully fetched pokemon-species with status:{}", responseEntity.getStatusCodeValue());
+                pokemonSpeciesResponseOp = Optional.of(objectMapper.readValue(responseEntity.getBody(), PokemonSpeciesResponse.class));
             }else{
-                return null;
+                log.error("API call to fetch pokemon-species is failed with statusL:{} response:{}", responseEntity.getStatusCodeValue(), responseEntity.getBody());
             }
         }catch (Exception e){
             log.error("Error occurred while fetching Pokemon-Species", e);
         }
-        return null;
+        return pokemonSpeciesResponseOp;
     }
 }

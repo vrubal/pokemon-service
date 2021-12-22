@@ -10,11 +10,17 @@ public class PokemonTranslationFactory {
     private PokemonYodaTranslator pokemonYodaTranslator;
     @Autowired
     private PokemonShakesPearTranslator pokemonShakesPearTranslator;
+    @Autowired
+    private DefaultPokemonTranslator defaultPokemonTranslator;
 
     public PokemonTranslator getPokemonTranslator(Pokemon pokemon){
+        if(pokemon.getDescription()==null)
+            return defaultPokemonTranslator;
+
         if ("cave".equalsIgnoreCase(pokemon.getHabitat()))
             return pokemonYodaTranslator;
         else
             return pokemonShakesPearTranslator;
+
     }
 }

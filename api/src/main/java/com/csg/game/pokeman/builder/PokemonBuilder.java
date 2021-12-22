@@ -7,6 +7,8 @@ import com.csg.game.pokeman.schema.response.PokemonResponse;
 import com.csg.game.pokeman.schema.response.PokemonSpeciesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 
 public abstract class PokemonBuilder {
     @Autowired
@@ -14,26 +16,31 @@ public abstract class PokemonBuilder {
     @Autowired
     private PokemonSpeciesClient pokemonSpeciesClient;
 
-    public Pokemon buildPokemon(String pokemonName){
-        PokemonResponse pokemonResponse = pokemonClient.get(pokemonName);
-        PokemonSpeciesResponse pokemonSpeciesResponse = pokemonSpeciesClient.get(pokemonResponse.getId());
-        return translatePokemon(pokemonResponse, pokemonSpeciesResponse);
+    public Optional<Pokemon> buildPokemon(String pokemonName) {
+        Optional<PokemonResponse> pokemonResponse = pokemonClient.get(pokemonName);
+        if(pokemonResponse.isPresent()) {
+            Optional<PokemonSpeciesResponse> pokemonSpeciesResponse = pokemonSpeciesClient.get(pokemonResponse.get().getId());
+            return translatePokemon(pokemonResponse, pokemonSpeciesResponse);
+        }
+        return Optional.empty();
     }
 
-    private Pokemon translatePokemon(PokemonResponse pokemonResponse, PokemonSpeciesResponse pokemonSpeciesResponse){
-        Pokemon pokemon = new Pokemon();
-        if(pokemonResponse != null){
-            pokemon.setId(pokemonResponse.getId());
-            pokemon.setName(pokemonResponse.getName());
+    private Optional<Pokemon> translatePokemon(Optional<PokemonResponse> pokemonResponse, Optional<PokemonSpeciesResponse> pokemonSpeciesResponse){
+        Optional<Pokemon> pokemonOptional = Optional.empty();
+        if(pokemonResponse.isPresent()){
+            Pokemon pokemon = new Pokemon();
+            pokemon.setId(pokemonResponse.get().getId());
+            pokemon.setName(pokemonResponse.get().getName());
+            pokemonOptional=Optional.of(pokemon);
         }
-        if(pokemonSpeciesResponse != null){
-            pokemon.setHabitat(pokemonSpeciesResponse.getHabitat().getName());
-            pokemon.setLegendary(pokemonSpeciesResponse.isLegendary());
-            if(pokemonSpeciesResponse.getFlavorTexts().size()>0){
-                pokemon.setDescription(pokemonSpeciesResponse.getFlavorTexts().get(0).getFlavorText());
+        if(pokemonSpeciesResponse.isPresent()){
+            pokemonOptional.get().setHabitat(pokemonSpeciesResponse.get().getHabitat().getName());
+            pokemonOptional.get().setLegendary(pokemonSpeciesResponse.get().isLegendary());
+            if(pokemonSpeciesResponse.get().getFlavorTexts().isPresent()){
+                pokemonOptional.get().setDescription(pokemonSpeciesResponse.get().getFlavorTexts().get().get(0).getFlavorText());
             }
         }
-        return pokemon;
+        return pokemonOptional;
     }
 
 }

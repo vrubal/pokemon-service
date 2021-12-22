@@ -1,0 +1,6 @@
+translation:
+  api:
+    url: https://api.funtranslations.com/translate
+pokemon:
+  api:
+    url: https://pokeapi.co/api/v2

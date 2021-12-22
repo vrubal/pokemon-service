@@ -8,6 +8,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Log4j2
 public class PokemonClient extends BaseClient{
@@ -15,19 +17,21 @@ public class PokemonClient extends BaseClient{
     @Value("${pokemon.api.url}")
     private String pokemonServiceUrl;
 
-    public PokemonResponse get(String pokemonName) {
+    public Optional<PokemonResponse> get(String pokemonName) {
+        Optional<PokemonResponse> pokemonResponseOp = Optional.empty();
         try {
             HttpEntity<String> httpEntity = getHttpEntity();
             String url = pokemonServiceUrl + "/pokemon/" + pokemonName;
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, String.class);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                return objectMapper.readValue(responseEntity.getBody(), PokemonResponse.class);
+                log.info("Successfully fetched pokemon with status:{}", responseEntity.getStatusCodeValue());
+                pokemonResponseOp = Optional.of(objectMapper.readValue(responseEntity.getBody(), PokemonResponse.class));
             }else{
-                return null;
+                log.error("API call to fetch pokemon is failed with statusL:{} response:{}", responseEntity.getStatusCodeValue(), responseEntity.getBody());
             }
         }catch (Exception e){
             log.error("Error occured while fetching Pokemon", e);
         }
-        return null;
+        return pokemonResponseOp;
     }
 }

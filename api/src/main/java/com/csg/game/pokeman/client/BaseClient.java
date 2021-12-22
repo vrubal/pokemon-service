@@ -12,6 +12,7 @@ public class BaseClient {
     @Autowired
     protected ObjectMapper objectMapper;
 
+
     protected HttpEntity<String> getHttpEntity(){
         HttpEntity<String> httpEntity = new HttpEntity(getHttpHeaders());
         return httpEntity;
