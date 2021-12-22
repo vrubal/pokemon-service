@@ -1,22 +1,14 @@
 package com.csg.game.pokeman.service;
 
-import com.csg.game.pokeman.client.PokemonClient;
-import com.csg.game.pokeman.client.PokemonSpeciesClient;
-import com.csg.game.pokeman.client.TransalationClient;
 import com.csg.game.pokeman.model.Pokemon;
 import com.csg.game.pokeman.model.PokemonType;
-import com.csg.game.pokeman.schema.response.PokemonResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -58,7 +50,36 @@ class PokemonServiceTest {
         when(restTemplate.exchange(eq("https://api.funtranslations.com/translate/yoda.json?text={encodedText}"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
                 thenReturn(ResponseEntity.ok().body(getTranslationResponse()));
 
-        Optional<Pokemon> pokemon = pokemonService.getPokemon("mewtwo", PokemonType.PLAIN);
+        Optional<Pokemon> pokemon = pokemonService.getPokemon("mewtwo", PokemonType.TRANSLATED);
+        Assertions.assertTrue(pokemon.isPresent());
+        Assertions.assertEquals(pokemon.get().getId(), 1234);
+    }
+
+    @Test
+    public void testGetTranslatedPokemon_habitat_cave(){
+        String speciesRes = "{\"is_legendary\":true, \"habitat\":{\"name\":\"cave\"}, \"flavor_text_entries\":[{\"flavor_text\":\"Description\"}]}";
+        when(restTemplate.exchange(eq("https://pokeapi.co/api/v2/pokemon/mewtwo"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
+                thenReturn(ResponseEntity.ok().body(getPokemonResponse()));
+        when(restTemplate.exchange(eq("https://pokeapi.co/api/v2/pokemon-species/1234"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
+                thenReturn(ResponseEntity.ok().body(speciesRes));
+        when(restTemplate.exchange(eq("https://api.funtranslations.com/translate/yoda.json?text={encodedText}"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
+                thenReturn(ResponseEntity.ok().body(getTranslationResponse()));
+
+        Optional<Pokemon> pokemon = pokemonService.getPokemon("mewtwo", PokemonType.TRANSLATED);
+        Assertions.assertTrue(pokemon.isPresent());
+        Assertions.assertEquals(pokemon.get().getId(), 1234);
+    }
+    @Test
+    public void testGetTranslatedPokemon_habitat_water(){
+        String speciesRes = "{\"is_legendary\":true, \"habitat\":{\"name\":\"water\"},\"flavor_text_entries\":[{\"flavor_text\":\"Description\"}]}";
+        when(restTemplate.exchange(eq("https://pokeapi.co/api/v2/pokemon/mewtwo"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
+                thenReturn(ResponseEntity.ok().body(getPokemonResponse()));
+        when(restTemplate.exchange(eq("https://pokeapi.co/api/v2/pokemon-species/1234"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
+                thenReturn(ResponseEntity.ok().body(speciesRes));
+        when(restTemplate.exchange(eq("https://api.funtranslations.com/translate/yoda.json?text={encodedText}"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
+                thenReturn(ResponseEntity.ok().body(getTranslationResponse()));
+
+        Optional<Pokemon> pokemon = pokemonService.getPokemon("mewtwo", PokemonType.TRANSLATED);
         Assertions.assertTrue(pokemon.isPresent());
         Assertions.assertEquals(pokemon.get().getId(), 1234);
     }
@@ -68,7 +89,7 @@ class PokemonServiceTest {
     }
 
     private String getPokemonSpeciesResponse() {
-        return "{\"is_legendary\":true}";
+        return "{\"is_legendary\":true, \"flavor_text_entries\":[{\"flavor_text\":\"Description\"}]}";
     }
 
     private String getPokemonResponse() {

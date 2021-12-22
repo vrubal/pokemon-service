@@ -14,7 +14,7 @@ public class PokemonTranslationFactory {
     private DefaultPokemonTranslator defaultPokemonTranslator;
 
     public PokemonTranslator getPokemonTranslator(Pokemon pokemon){
-        if(pokemon.getDescription()==null)
+        if(pokemon.getHabitat()==null)
             return defaultPokemonTranslator;
 
         if ("cave".equalsIgnoreCase(pokemon.getHabitat()))
