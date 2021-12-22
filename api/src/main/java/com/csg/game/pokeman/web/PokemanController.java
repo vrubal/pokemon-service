@@ -24,7 +24,7 @@ public class PokemanController extends BaseController{
     }
 
     @GetMapping(path = "/{name}")
-    public ResponseEntity<Pokemon> getPokemon(@PathVariable ("name") String name) throws PokemonNotFoundException {
+    public ResponseEntity<Pokemon> getPokemon(@PathVariable ("name") String name)  {
         Optional<Pokemon> pokemon = pokemonService.getPokemon(name, PokemonType.PLAIN);
         if(pokemon.isPresent()){
             return getResponse(pokemon.get());
@@ -34,7 +34,7 @@ public class PokemanController extends BaseController{
     }
 
     @GetMapping(path = "/translated/{name}")
-    public ResponseEntity<Pokemon> getTranlatedPokemon(@PathVariable ("name") String name) throws PokemonNotFoundException {
+    public ResponseEntity<Pokemon> getTranlatedPokemon(@PathVariable ("name") String name) {
         Optional<Pokemon> pokemon = pokemonService.getPokemon(name, PokemonType.TRANSLATED);
         if(pokemon.isPresent()){
             return getResponse(pokemon.get());

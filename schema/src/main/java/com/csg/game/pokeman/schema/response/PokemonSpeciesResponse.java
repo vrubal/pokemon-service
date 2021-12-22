@@ -13,7 +13,7 @@ public class PokemonSpeciesResponse {
     @JsonProperty("is_legendary")
     private boolean isLegendary;
     @JsonProperty("flavor_text_entries")
-    private Optional<List<FlavorText>> flavorTexts;
+    private List<FlavorText> flavorTexts;
     @JsonProperty("form_descriptions")
     private List<FormDescription> formDescriptions;
     @JsonProperty("habitat")

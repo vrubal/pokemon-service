@@ -25,19 +25,24 @@ public abstract class PokemonBuilder {
         return Optional.empty();
     }
 
-    private Optional<Pokemon> translatePokemon(Optional<PokemonResponse> pokemonResponse, Optional<PokemonSpeciesResponse> pokemonSpeciesResponse){
+    private Optional<Pokemon> translatePokemon(Optional<PokemonResponse> pokemonResponseOp, Optional<PokemonSpeciesResponse> pokemonSpeciesResponseOp){
         Optional<Pokemon> pokemonOptional = Optional.empty();
-        if(pokemonResponse.isPresent()){
+        if(pokemonResponseOp.isPresent()){
+            PokemonResponse pokemonResponse = pokemonResponseOp.get();
             Pokemon pokemon = new Pokemon();
-            pokemon.setId(pokemonResponse.get().getId());
-            pokemon.setName(pokemonResponse.get().getName());
+            pokemon.setId(pokemonResponse.getId());
+            pokemon.setName(pokemonResponse.getName());
             pokemonOptional=Optional.of(pokemon);
         }
-        if(pokemonSpeciesResponse.isPresent()){
-            pokemonOptional.get().setHabitat(pokemonSpeciesResponse.get().getHabitat().getName());
-            pokemonOptional.get().setLegendary(pokemonSpeciesResponse.get().isLegendary());
-            if(pokemonSpeciesResponse.get().getFlavorTexts().isPresent()){
-                pokemonOptional.get().setDescription(pokemonSpeciesResponse.get().getFlavorTexts().get().get(0).getFlavorText());
+        if(pokemonSpeciesResponseOp.isPresent()){
+            Pokemon pokemon = pokemonOptional.get();
+            PokemonSpeciesResponse pokemonSpeciesResponse = pokemonSpeciesResponseOp.get();
+            pokemon.setLegendary(pokemonSpeciesResponse.isLegendary());
+            if(null != pokemonSpeciesResponse.getFlavorTexts() && pokemonSpeciesResponse.getFlavorTexts().size() > 0){
+                pokemon.setDescription(pokemonSpeciesResponse.getFlavorTexts().get(0).getFlavorText());
+            }
+            if(null != pokemonSpeciesResponse.getHabitat()) {
+                pokemon.setHabitat(pokemonSpeciesResponse.getHabitat().getName());
             }
         }
         return pokemonOptional;
