@@ -62,7 +62,7 @@ class PokemonServiceTest {
                 thenReturn(ResponseEntity.ok().body(getPokemonResponse()));
         when(restTemplate.exchange(eq("https://pokeapi.co/api/v2/pokemon-species/1234"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
                 thenReturn(ResponseEntity.ok().body(speciesRes));
-        when(restTemplate.exchange(eq("https://api.funtranslations.com/translate/yoda.json?text={encodedText}"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
+        when(restTemplate.exchange(eq("https://api.funtranslations.com/translate/yoda.json?text={encodedText}"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class), any(String.class))).
                 thenReturn(ResponseEntity.ok().body(getTranslationResponse()));
 
         Optional<Pokemon> pokemon = pokemonService.getPokemon("mewtwo", PokemonType.TRANSLATED);
@@ -76,7 +76,7 @@ class PokemonServiceTest {
                 thenReturn(ResponseEntity.ok().body(getPokemonResponse()));
         when(restTemplate.exchange(eq("https://pokeapi.co/api/v2/pokemon-species/1234"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
                 thenReturn(ResponseEntity.ok().body(speciesRes));
-        when(restTemplate.exchange(eq("https://api.funtranslations.com/translate/yoda.json?text={encodedText}"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class))).
+        when(restTemplate.exchange(eq("https://api.funtranslations.com/translate/shakespeare.json?text={encodedText}"), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class), any(String.class))).
                 thenReturn(ResponseEntity.ok().body(getTranslationResponse()));
 
         Optional<Pokemon> pokemon = pokemonService.getPokemon("mewtwo", PokemonType.TRANSLATED);
