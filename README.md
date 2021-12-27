@@ -29,9 +29,9 @@ Steps to run the service
 6. API details:
    
    GET - API :getPokemonByName 
-   http://localhost:8080/pokemons/<name>
+   http://localhost:8080/pokemons/{name}
   
    GET - API :getTranslatedPokemon
-   http://localhost:8080/pokemons/translated/<name>
+   http://localhost:8080/pokemons/translated/{name}
 
    
